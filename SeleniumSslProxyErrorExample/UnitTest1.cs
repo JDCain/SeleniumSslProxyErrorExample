@@ -12,8 +12,8 @@ namespace SeleniumSslProxyErrorExample
     {
         public UnitTest1()
         {
-            var httpEndPoint = new Uri("http://127.0.0.1:8080");
-            var sslEndPoint = new Uri("https://127.0.0.1:9090");
+            var httpEndPoint = new Uri("http://localhost:80");
+            var sslEndPoint = new Uri("https://localhost:443");
             Proxy = new ProxyTest(httpEndPoint, sslEndPoint);
 
             var options = new ChromeOptions();
@@ -21,8 +21,7 @@ namespace SeleniumSslProxyErrorExample
             var downloadPath = Path.Combine(profilePath, "Downloads");
             if (!Directory.Exists(downloadPath)) Directory.CreateDirectory(downloadPath);
             options.AddUserProfilePreference("download.default_directory", downloadPath);
-            //--lang=en-US,en headless does not define a language by default
-            options.AddArguments("--incognito", "--lang=en-US,en", $@"--user-data-dir={profilePath}", "--ignore-certificate-errors", "--allow-insecure-localhost");
+            //--lang=en-US,en headless does not define a language by default);
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 options.AddArguments("--whitelisted-ips", "--disable-dev-shm-usage");
             options.UnhandledPromptBehavior = UnhandledPromptBehavior.Dismiss;
@@ -31,6 +30,7 @@ namespace SeleniumSslProxyErrorExample
             {
                 HttpProxy = $"{httpEndPoint.Host}:{httpEndPoint.Port}",
                 SslProxy = $"{sslEndPoint.Host}:{sslEndPoint.Port}",
+                //SocksProxy = $"{httpEndPoint.Host}:{httpEndPoint.Port}",
                 Kind = ProxyKind.Manual,
             };
 

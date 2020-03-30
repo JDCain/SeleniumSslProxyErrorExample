@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BenderProxy" Version="1.1.2" />
+    <!--<PackageReference Include="BenderProxy" Version="1.1.2" />-->
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     <PackageReference Include="PassedBall" Version="1.2.0" />
     <PackageReference Include="Selenium.WebDriver" Version="3.141.0" />
@@ -18,6 +18,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="coverlet.collector" Version="1.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BenderProxy\BenderProxy.csproj" />
   </ItemGroup>
 
 </Project>

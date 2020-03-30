@@ -19,10 +19,24 @@ namespace SeleniumSslProxyErrorExample
     {
         public ProxyTest(Uri httpEndPoint, Uri sslEndPoint)
         {
+            var timeout = TimeSpan.FromSeconds(5);
+
             X509Certificate2 cert = BuildSelfSignedServerCertificate(sslEndPoint.Host);
 
-                HttpProxy = new HttpProxyServer(httpEndPoint.Host, httpEndPoint.Port, new HttpProxy());
-                SslProxy = new HttpProxyServer(sslEndPoint.Host, sslEndPoint.Port, new SslProxy(cert, 443, null, SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls));
+                HttpProxy = new HttpProxyServer(httpEndPoint.Host, httpEndPoint.Port, new HttpProxy()
+                {
+                    ClientReadTimeout = timeout,
+                    ClientWriteTimeout = timeout,
+                    ServerReadTimeout = timeout,
+                    ServerWriteTimeout = timeout
+                });
+                SslProxy = new HttpProxyServer(sslEndPoint.Host, sslEndPoint.Port, new SslProxy(cert)
+                {
+                    ClientReadTimeout = timeout,
+                    ClientWriteTimeout = timeout,
+                    ServerReadTimeout = timeout,
+                    ServerWriteTimeout = timeout
+                });
                 WaitHandle.WaitAll(
                     new[] {
                         HttpProxy.Start(),
@@ -31,7 +45,7 @@ namespace SeleniumSslProxyErrorExample
 
                 HttpProxy.Proxy.OnResponseReceived = ProcessResponse;
                 SslProxy.Proxy.OnResponseReceived = ProcessResponse;
-            }
+        }
 
         private static X509Certificate2 BuildSelfSignedServerCertificate(string certificateName)
         {

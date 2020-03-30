@@ -4,13 +4,12 @@ using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
-using BenderProxy;
 using BenderProxy.Headers;
 using BenderProxy.Logging;
 using BenderProxy.Utils;
 using BenderProxy.Writers;
 
-namespace SeleniumSslProxyErrorExample
+namespace BenderProxy
 {
     /// <summary>
     ///     HTTP proxy capable to intercept HTTPS requests.
@@ -92,17 +91,7 @@ namespace SeleniumSslProxyErrorExample
             }
 
             var sslServerStream = new SslStream(context.ServerStream, false, _certificateValidationCallback);
-
-            try
-            {
-                sslServerStream.AuthenticateAsClient(context.ServerEndPoint.Host, null, _enabledProtocols, false);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-
+            sslServerStream.AuthenticateAsClient(context.ServerEndPoint.Host, null, _enabledProtocols, false);
             context.ServerStream = sslServerStream;
 
             this.OnLog(LogLevel.Debug,
@@ -158,7 +147,7 @@ namespace SeleniumSslProxyErrorExample
                 {
                     this.OnLog(LogLevel.Warn, "Request Aborted. {0}", TraceUtils.GetHttpTrace(context.RequestHeader));
                 }
-                else if (ex.IsSocketException(SocketError.TimedOut))
+                else if(ex.IsSocketException(SocketError.TimedOut))
                 {
                     this.OnLog(LogLevel.Warn, "Client request time out. {0}", TraceUtils.GetHttpTrace(context.RequestHeader));
                 }
@@ -169,7 +158,7 @@ namespace SeleniumSslProxyErrorExample
 
                 context.StopProcessing();
             }
-
+            
         }
     }
 }
